@@ -2,4 +2,3 @@
 .bundle
 *.gem
 .DS_Store
-heartbeatz.log
