@@ -32,13 +32,35 @@ class MainController < ApplicationController
   end
 
   def day_logs
-    @heartbeats = Heartbeat.where(log_time: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day))
+    if params[:year].nil? or params[:month].nil? or params[:day].nil?
+      day = Time.zone.now
+    else
+      begin
+        day = Time.new(params[:year], params[:month], params[:day])
+      rescue Exception => e
+        render json: { invalid_time: [ params[:year], params[:month], params[:day] ].join('/') }
+      end
+    end
+    @heartbeats = Heartbeat.where(log_time: (day.beginning_of_day..day.end_of_day))
     render template: :get_heartbeat_logs
   end
 
   def day_time
-    @heartbeats = Heartbeat.where(log_time: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)).sort_by { |beat| beat.log_time }
-    total_time = (@heartbeats.last.log_time - @heartbeats.first.log_time)
-    render json: { total_time: total_time }
+    if params[:year].nil? or params[:month].nil? or params[:day].nil?
+      day = Time.zone.now
+    else
+      begin
+        day = Time.new(params[:year], params[:month], params[:day])
+      rescue Exception => e
+        render json: { invalid_time: [ params[:year], params[:month], params[:day] ].join('/') }
+      end
+    end
+    @heartbeats = Heartbeat.where(log_time: (day.beginning_of_day..day.end_of_day)).sort_by { |beat| beat.log_time }
+    if @heartbeats.nil? or @heartbeats.first.nil? or @heartbeats.last.nil?
+      render json: { error: 'no logs recorded for this time period' }
+    else
+      total_time = (@heartbeats.last.log_time - @heartbeats.first.log_time)
+      render json: { total_time: total_time }
+    end
   end
 end
