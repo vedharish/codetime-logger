@@ -31,8 +31,14 @@ class MainController < ApplicationController
     render :json => {:value => 'Wrong Path'}
   end
 
-  def total_time_today
+  def day_logs
     @heartbeats = Heartbeat.where(log_time: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day))
     render template: :get_heartbeat_logs
+  end
+
+  def day_time
+    @heartbeats = Heartbeat.where(log_time: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)).sort_by { |beat| beat.log_time }
+    total_time = (@heartbeats.first.log_time - @heartbeats.first.time)
+    render json: { total_time: total_time }
   end
 end
