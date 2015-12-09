@@ -38,7 +38,7 @@ class MainController < ApplicationController
 
   def day_time
     @heartbeats = Heartbeat.where(log_time: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)).sort_by { |beat| beat.log_time }
-    total_time = (@heartbeats.first.log_time - @heartbeats.first.time)
+    total_time = (@heartbeats.last.log_time - @heartbeats.first.log_time)
     render json: { total_time: total_time }
   end
 end
