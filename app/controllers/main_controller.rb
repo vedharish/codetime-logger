@@ -1,5 +1,6 @@
 require 'json'
 require 'date'
+require 'time_difference'
 
 class MainController < ApplicationController
   def log_heartbeat
@@ -61,7 +62,7 @@ class MainController < ApplicationController
     if @heartbeats.nil? or @heartbeats.first.nil? or @heartbeats.last.nil?
       render json: { error: 'no logs recorded for this time period' }
     else
-      total_time = (@heartbeats.last.log_time - @heartbeats.first.log_time)
+      total_time = TimeDifference.between(@heartbeats.first.log_time, @heartbeats.last.log_time).in_general
       render json: { total_time: total_time }
     end
   end
