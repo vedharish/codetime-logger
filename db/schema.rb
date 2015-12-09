@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151205074225) do
+ActiveRecord::Schema.define(version: 20151209084900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,5 +29,7 @@ ActiveRecord::Schema.define(version: 20151205074225) do
     t.string   "branch"
     t.string   "log_type"
   end
+
+  add_index "heartbeats", ["log_time"], name: "index_heartbeats_on_log_time", using: :btree
 
 end

@@ -24,11 +24,15 @@ class MainController < ApplicationController
 
   def get_heartbeat_logs
     @heartbeats = Heartbeat.all
-    puts @heartbeats.inspect
     render template: :get_heartbeat_logs
   end
 
   def not_found
     render :json => {:value => 'Wrong Path'}
+  end
+
+  def total_time_today
+    @heartbeats = Heartbeat.where(log_time: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day))
+    render template: :get_heartbeat_logs
   end
 end
