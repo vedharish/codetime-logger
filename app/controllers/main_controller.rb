@@ -39,6 +39,7 @@ class MainController < ApplicationController
         day = Time.new(params[:year], params[:month], params[:day])
       rescue Exception => e
         render json: { invalid_time: [ params[:year], params[:month], params[:day] ].join('/') }
+        return
       end
     end
     @heartbeats = Heartbeat.where(log_time: (day.beginning_of_day..day.end_of_day))
@@ -53,6 +54,7 @@ class MainController < ApplicationController
         day = Time.new(params[:year], params[:month], params[:day])
       rescue Exception => e
         render json: { invalid_time: [ params[:year], params[:month], params[:day] ].join('/') }
+        return
       end
     end
     @heartbeats = Heartbeat.where(log_time: (day.beginning_of_day..day.end_of_day)).sort_by { |beat| beat.log_time }
